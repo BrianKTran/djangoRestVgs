@@ -1,0 +1,36 @@
+  
+{% extends "base.html" %}
+{% block content %}
+<form class="form-horizontal2 boxed" method="POST" action="/post/">
+    <!--CREDIT CARD PAYMENT-->
+    <div class="panel panel-info">
+        <div class="form-group">
+            <div class="col-md-12">
+                <label for="pan_number" id="pan_number_label">Credit Card Number</label>
+                <input class="form-control" placeholder="Card Number" type="text" name="cc_number" maxlength="16" id="pan_number" value="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="pan_exp" id="pan_exp_label">CC Expiration</label>
+            <input class="form-control" placeholder="Card Expiration" type="text" name="cc_exp" maxlength="5" id="pan_exp">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="pan_cvv" id="pan_cvv_label">CC CVV</label>
+        <input class="form-control" placeholder="CVV" type="text" name="cc_cvv" maxlength="3" id="pan_cvv" value="">
+    </div>
+   
+    <button type="submit">Redact data</button>
+</form>
+
+
+<h1>Redacted data: {{ message }}</h1>
+<form method="GET" action="/get">
+    <input placeholder="alias here" type="text" name="message">
+    <button type="submit">Reveal data</button>
+</form>
+
+<h1>Revealed data:</h1>
+<div>{{ response.data }}</div>
+
+{% endblock %}
