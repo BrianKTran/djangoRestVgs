@@ -22,10 +22,11 @@ from vgsRestApp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     # url(r'^admin/', admin.site.urls),
-    url(r'^creditCardInfo/', views.creditCardList.as_view(), name='creditCardInfo'),
-    url(r'^index/', views.index.as_view(), name='index'),
+    # url(r'^creditCardInfo/', views.creditCardList.as_view(), name='creditCardInfo'),
+    url(r'^index/', views.index_view.as_view(), name='index'),
     # url(r'^index/', views.creditCardList.index, name='index')
     # path('index/', views.indexPost, name='index'),
     # path('index/', views.indexGet, name='index'),
 ]
 
+urlpatterns = format_suffix_patterns(urlpatterns)
