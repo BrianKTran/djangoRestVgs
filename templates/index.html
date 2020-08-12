@@ -1,17 +1,19 @@
-  
+<!--   
 {% extends "base.html" %}
-{% block content %}
+{% block content %} -->
 
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>VGS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
-<body> -->
+<body>
 
-<form class="form-horizontal2 boxed" method="POST" action="/post">
+<form class="form-horizontal2 boxed" id="submitRedact" method="POST" action="/post">
     <!--CREDIT CARD PAYMENT-->
+    {% csrf_token %}
     <div class="panel panel-info">
         <div class="form-group">
             <div class="col-md-12">
@@ -29,14 +31,14 @@
         <input class="form-control" placeholder="CVV" type="text" name="cc_cvv" maxlength="3" id="pan_cvv" value="">
     </div>
    
-    <button type="submit">Redact data</button>
+    <button type="submit" >Redact data</button>
 </form>
 
 
 <h1>Redacted data: {{ message }}</h1>
 <form method="GET" action="/get">
     <input placeholder="alias here" type="text" name="message">
-    <button type="submit">Reveal data</button>
+    <button type="submit" id="submitReveal">Reveal data</button>
 </form>
 
 <h1>Revealed data:</h1>
@@ -44,40 +46,41 @@
 
 <script>
 
-    data = JSON.stringify({
-        headline: "Testing",
-        tag: "Testing",
-        background_image: "Testing",
-        content: "Testing",
-        user: 1
-    })
-    
-    let csrftoken = getCookie('csrftoken');
-    let response = fetch("/shop/checkdb/", {
-        method: 'POST',
-        body: data,
-        headers: { 'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json',
-            "X-CSRFToken": csrftoken },
-    })
-    
-    
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
+//   js
+$(document).ready(function () {
+$('#submitRedact').click(function(){          
+
+var data = 'http://127.0.0.1:8000/ccPost/';
+data.card_number = $('#pan_number').val();
+data.exp_date = $('#pan_exp').val();
+data.cvv = $('#pan_cvv').val();
+
+$.ajax({
+    type: "POST",
+    url: "http://127.0.0.1:8000/ccPost/",
+    data: data,
+    // JSON.stringify.data,
+    contentType: "application/json; charset=utf-8",
+    dataType: "JSON",
+    beforeSend: function (xhr, settings) {
+        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+    },
+    // beforeSend: function(xhr, settings) {
+    //               if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+    //                       xhr.setRequestHeader("X-CSRFToken", {% csrf_token %});
+    //            }
+    //       },
+    success: function(data){
+        alert(data);
+    },
+    failure: function(errMsg) {
+        alert(errMsg);
     }
+});
+});
+});
     
     </script>
-{% endblock %}
-<!-- </body>
-</html> -->
+<!-- {% endblock %} -->
+</body>
+</html>

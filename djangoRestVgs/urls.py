@@ -22,15 +22,13 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # url(r'^admin/', admin.site.urls),
-    # url(r'^creditCardInfo/', views.creditCardList.as_view(), name='creditCardInfo'),
-    url(r'^cc_info/', views.creditCardList.as_view(), name='index'),
+    
+    url(r'^ccGet/', views.ccGet.as_view(), name='ccGet'),
+    url(r'^ccPost/', views.ccPost.as_view(), name='ccPost'),
     url(r'^index/', views.index.as_view(), name='index'),
-    # path('index/', TemplateView.as_view(), template_name='index.html'),
-    # url(r'^index/', include('djangoRestVgs.urls')),
-    # url(r'^index/', views.creditCardList.index, name='index')
-    path('index/', views.post, name='index'),
-    # path('index/', views.indexGet, name='index'),
+    # url(r'^/', views.insertCC.as_view(), name='ccinsert'),
+    # path('index/', views.insertCC)
+  
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
