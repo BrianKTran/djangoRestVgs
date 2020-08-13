@@ -40,14 +40,25 @@
 
 
     <h1>Redacted data: {{ message }}</h1>
-    <form method="GET" action="/ccGet">
+    <form method="GET" action="#" id="submitReveal">
         <input placeholder="alias here" type="text" name="message">
-        <button type="submit" id="submitReveal">Reveal data</button>
+        <button type="submit">Reveal data</button>
     </form>
 
     <h1>Revealed data:</h1>
     <div>{{ response.data }}</div>
+    <center>
+        <table id="myTable" border="1">
 
+            <tr>
+                <th>cc#</th>
+                <th>exp date</th>
+                <th>cvv</th> 
+            </tr>
+ 
+
+        </table>
+    </center>
     <script>
 
         // js
@@ -69,11 +80,7 @@
                     beforeSend: function (xhr, settings) {
                         xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
                     },
-                    // beforeSend: function(xhr, settings) {
-                    // if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    // xhr.setRequestHeader("X-CSRFToken", {% csrf_token %});
-                    // }
-                    // },
+                 
                     success: function (data) {
                         alert(data);
                     },
@@ -84,6 +91,29 @@
             });
         });
 
+        $(document).ready(function () {
+            //  $('#submitReveal').submit(function () {
+
+                $.ajax({
+                    url: "http://127.0.0.1:8000/ccGet/",
+                    dataType: "JSON",
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                    },
+                  
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            var row=$('<tr><td>' + data[i].card_number + '</td>' + '<td>' +data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
+                            $('#myTable').append(row);
+                        }
+                        alert(data);
+                    },
+                    failure: function (errMsg) {
+                        alert(errMsg);
+                    }
+                });
+        //      });
+        });
     </script>
     <!-- {% endblock %} -->
 </body>
