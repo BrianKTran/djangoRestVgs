@@ -1,86 +1,91 @@
-<!--   
+<!--
 {% extends "base.html" %}
 {% block content %} -->
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>VGS</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+
 <body>
 
-<form class="form-horizontal2 boxed" id="submitRedact" method="POST" action="/post">
-    <!--CREDIT CARD PAYMENT-->
-    {% csrf_token %}
-    <div class="panel panel-info">
-        <div class="form-group">
-            <div class="col-md-12">
-                <label for="pan_number" id="pan_number_label">Credit Card Number</label>
-                <input class="form-control" placeholder="Card Number" type="text" name="cc_number" maxlength="16" id="pan_number" value="">
+    <form class="form-horizontal2 boxed" id="submitRedact" method="POST" action="javascript:">
+        <!--CREDIT CARD PAYMENT-->
+        {% csrf_token %}
+        <div class="panel panel-info">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="pan_number" id="pan_number_label">Credit Card Number</label>
+                    <input class="form-control" placeholder="Card Number" type="text" name="cc_number" maxlength="16"
+                        id="pan_number" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="pan_exp" id="pan_exp_label">CC Expiration</label>
+                <input class="form-control" placeholder="Card Expiration" type="text" name="cc_exp" maxlength="5"
+                    id="pan_exp">
             </div>
         </div>
         <div class="form-group">
-            <label for="pan_exp" id="pan_exp_label">CC Expiration</label>
-            <input class="form-control" placeholder="Card Expiration" type="text" name="cc_exp" maxlength="5" id="pan_exp">
+            <label for="pan_cvv" id="pan_cvv_label">CC CVV</label>
+            <input class="form-control" placeholder="CVV" type="text" name="cc_cvv" maxlength="3" id="pan_cvv" value="">
         </div>
-    </div>
-    <div class="form-group">
-        <label for="pan_cvv" id="pan_cvv_label">CC CVV</label>
-        <input class="form-control" placeholder="CVV" type="text" name="cc_cvv" maxlength="3" id="pan_cvv" value="">
-    </div>
-   
-    <button type="submit" >Redact data</button>
-</form>
+
+        <button type="submit">Redact data</button>
+    </form>
 
 
-<h1>Redacted data: {{ message }}</h1>
-<form method="GET" action="/get">
-    <input placeholder="alias here" type="text" name="message">
-    <button type="submit" id="submitReveal">Reveal data</button>
-</form>
+    <h1>Redacted data: {{ message }}</h1>
+    <form method="GET" action="/ccGet">
+        <input placeholder="alias here" type="text" name="message">
+        <button type="submit" id="submitReveal">Reveal data</button>
+    </form>
 
-<h1>Revealed data:</h1>
-<div>{{ response.data }}</div>
+    <h1>Revealed data:</h1>
+    <div>{{ response.data }}</div>
 
-<script>
+    <script>
 
-//   js
-$(document).ready(function () {
-$('#submitRedact').click(function(){          
+        // js
+        $(document).ready(function () {
+            $('#submitRedact').submit(function () {
 
-var data = 'http://127.0.0.1:8000/ccPost/';
-data.card_number = $('#pan_number').val();
-data.exp_date = $('#pan_exp').val();
-data.cvv = $('#pan_cvv').val();
+                var data = {};
+                data.card_number = $('#pan_number').val();
+                data.exp_date = $('#pan_exp').val();
+                data.cvv = $('#pan_cvv').val();
 
-$.ajax({
-    type: "POST",
-    url: "http://127.0.0.1:8000/ccPost/",
-    data: data,
-    // JSON.stringify.data,
-    contentType: "application/json; charset=utf-8",
-    dataType: "JSON",
-    beforeSend: function (xhr, settings) {
-        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-    },
-    // beforeSend: function(xhr, settings) {
-    //               if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-    //                       xhr.setRequestHeader("X-CSRFToken", {% csrf_token %});
-    //            }
-    //       },
-    success: function(data){
-        alert(data);
-    },
-    failure: function(errMsg) {
-        alert(errMsg);
-    }
-});
-});
-});
-    
+                $.ajax({
+                    type: "POST",
+                    url: "http://127.0.0.1:8000/ccPost/",
+                    data: JSON.stringify(data),
+                    // 
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                    },
+                    // beforeSend: function(xhr, settings) {
+                    // if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    // xhr.setRequestHeader("X-CSRFToken", {% csrf_token %});
+                    // }
+                    // },
+                    success: function (data) {
+                        alert(data);
+                    },
+                    failure: function (errMsg) {
+                        alert(errMsg);
+                    }
+                });
+            });
+        });
+
     </script>
-<!-- {% endblock %} -->
+    <!-- {% endblock %} -->
 </body>
+
 </html>
