@@ -12,7 +12,7 @@
 </head>
 
 <body>
-
+    <h1>Enter Sentitive CC Data: {{ message }}</h1>
     <form class="form-horizontal2 boxed" id="submitRedact" method="POST" action="javascript:">
         <!--CREDIT CARD PAYMENT-->
         {% csrf_token %}
@@ -39,28 +39,61 @@
     </form>
 
 
-    <h1>Redacted data: {{ message }}</h1>
-    <form method="GET" action="#" id="submitReveal">
-        <input placeholder="alias here" type="text" name="message">
+    <h1>Enter Redacted Data: {{ submitRedact }}</h1>
+    <form method="POST" action="javascript:" id="submitReveal">
+        {% csrf_token %}
+        <div class="panel panel-info">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="pan_number" id="pan_number_label">Credit Card Number</label>
+                    <input class="form-control" placeholder="Card Number" type="text" name="cc_number" maxlength=""
+                        id="pan1_number" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="pan_exp" id="pan_exp_label">CC Expiration</label>
+                <input class="form-control" placeholder="Card Expiration" type="text" name="cc_exp" maxlength=""
+                    id="pan1_exp">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="pan_cvv" id="pan_cvv_label">CC CVV</label>
+            <input class="form-control" placeholder="CVV" type="text" name="cc_cvv" maxlength="" id="pan1_cvv" value="">
+        </div>
+
         <button type="submit">Reveal data</button>
     </form>
 
-    <h1>Revealed data:</h1>
-    <div>{{ response.data }}</div>
-    <center>
-        <table id="myTable" border="1">
+    <!-- <h1>Revealed data from entered Redacted Data :</h1>
+    <div>{{ response.data }}</div> -->
+    <!-- <center> -->
+        <!-- <h1>Encrypted Data</h1> -->
+        <h1> Redacted and Revealed Data Table:</h1>
+    <table id="encryptTable" border="8">
 
-            <tr>
-                <th>cc#</th>
-                <th>exp date</th>
-                <th>cvv</th> 
-            </tr>
- 
+        <tr>
+            <th>cc#</th>
+            <th>exp date</th>
+            <th>cvv</th>
+        </tr>
 
-        </table>
-    </center>
+
+    </table>
+
+    <!-- <h1>Decrypted Data</h1>
+    <table id="decryptTable" border="8">
+
+        <tr>
+            <th>cc#</th>
+            <th>exp date</th>
+            <th>cvv</th>
+        </tr>
+
+
+    </table> -->
+    <!-- </center> -->
     <script>
-
+    
         // js
         $(document).ready(function () {
             $('#submitRedact').submit(function () {
@@ -80,9 +113,38 @@
                     beforeSend: function (xhr, settings) {
                         xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
                     },
-                 
+
                     success: function (data) {
-                        alert(data);
+                        alert('ajax post call successfull' + ' ' + data);
+                    },
+                    failure: function (errMsg) {
+                        alert(errMsg);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#submitReveal').submit(function () {
+
+                var data = {};
+                data.card_number = $('#pan1_number').val();
+                data.exp_date = $('#pan1_exp').val();
+                data.cvv = $('#pan1_cvv').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "http://127.0.0.1:8000/postReveal/",
+                    data: JSON.stringify(data),
+                    // 
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                    },
+
+                    success: function (data) {
+                        alert('ajax post call successfull' + '-' + data);
                     },
                     failure: function (errMsg) {
                         alert(errMsg);
@@ -94,25 +156,49 @@
         $(document).ready(function () {
             //  $('#submitReveal').submit(function () {
 
-                $.ajax({
-                    url: "http://127.0.0.1:8000/ccGet/",
-                    dataType: "JSON",
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                    },
-                  
-                    success: function (data) {
-                        for (var i = 0; i < data.length; i++) {
-                            var row=$('<tr><td>' + data[i].card_number + '</td>' + '<td>' +data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
-                            $('#myTable').append(row);
-                        }
-                        alert(data);
-                    },
-                    failure: function (errMsg) {
-                        alert(errMsg);
+            $.ajax({
+                url: "http://127.0.0.1:8000/ccGet/",
+                dataType: "JSON",
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                },
+
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var row = $('<tr><td>' + data[i].card_number + '</td>' + '<td>' + data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
+                        $('#encryptTable').append(row);
                     }
-                });
-        //      });
+                    alert('ajax get call successful' + ' ' + data);
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+            //      });
+        });
+
+        $(document).ready(function () {
+            //  $('#submitReveal').submit(function () {
+
+            $.ajax({
+                url: "http://127.0.0.1:8000/ccGet/",
+                dataType: "JSON",
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                },
+
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var row = $('<tr><td>' + data[i].card_number + '</td>' + '<td>' + data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
+                        $('#decryptTable').append(row);
+                    }
+                    alert('ajax get call successful' + ' ' + data);
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+            //      });
         });
     </script>
     <!-- {% endblock %} -->
