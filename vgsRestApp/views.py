@@ -61,9 +61,12 @@ class postReveal(APIView):
         creditCard1 = creditCardInfo.objects.all()
         os.environ['HTTPS_PROXY'] = 'https://USi6vXVNrcsBYnpCMB7GciTg:2da52565-6e72-4a46-b419-245764f128ae@tntzrhiqrtg.SANDBOX.verygoodproxy.com:8080'
         response = requests.post('https://echo.apps.verygood.systems/post',
-                                 json={"card_number": request.data["card_number"],
-                                       "exp_date": request.data["exp_date"],
-                                       "cvv": request.data["cvv"]},
+                                 json={
+                                      # "card_number": request.data["card_number"],
+                                      # "exp_date": request.data["exp_date"],
+                                      # "cvv": request.data["cvv"]
+                                       "cc_id": request.data["cc_id"]
+                                   },
                                  verify='vgsRestApp/cert.pem')
         # decode from binary string to regular string
         decode = response.content.decode('ascii')
