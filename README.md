@@ -1,10 +1,10 @@
-git clone https://github.com/BrianKTran/djangoRestVgs.git
+run git clone https://github.com/BrianKTran/djangoRestVgs.git
 
-python --version # make sure you are using python 3
+run python --version to make sure you are using python 3
 
-pip install django djangorestframework requests
+run pip install django djangorestframework requests
 
-python manage.py runserver
+run python manage.py runserver
 
 Go to http://127.0.0.1:8000/index/
 
