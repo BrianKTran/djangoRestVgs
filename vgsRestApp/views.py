@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, HttpResponse
-from .forms import CreditCardForm
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from rest_framework.views import APIView
