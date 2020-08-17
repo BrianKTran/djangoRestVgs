@@ -28,3 +28,5 @@ Enter Redacted Data:
 Hit refresh and hit ok to clear alert boxes 
 
 See decrypted information in the Data Table below which has been sent to echo server
+
+short video included in project solution \djangoRestVgs\djangoRestVgs\short_demo_video.mp4
