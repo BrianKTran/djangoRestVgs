@@ -1,6 +1,4 @@
-<!--
-{% extends "base.html" %}
-{% block content %} -->
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,9 +10,9 @@
 </head>
 
 <body>
-    <h1>Enter Sentitive CC Data: {{ message }}</h1>
+    <h1>Enter Sentitive CC Data: </h1>
     <form class="form-horizontal2 boxed" id="submitRedact" method="POST" action="javascript:">
-        <!--CREDIT CARD PAYMENT-->
+ 
         {% csrf_token %}
         <div class="panel panel-info">
             <div class="form-group">
@@ -39,16 +37,11 @@
     </form>
 
 
-    <h1>Enter Redacted Data: {{ submitRedact }}</h1>
+    <h1>Enter Redacted Data: </h1>
     <form method="POST" action="javascript:" id="submitReveal">
         {% csrf_token %}
-          <div class="form-group">
-                <div class="col-md-12">
-                    <label for="pan_id" id="pan_id_label">CC Number Token</label>
-                    <input class="form-control" placeholder="Card Number" type="text" name="pan_id" maxlength=""
-                        id="pan_id" value="">
-                </div>
-        <!--div class="panel panel-info">
+
+       <div class="panel panel-info">
             <div class="form-group">
                 <div class="col-md-12">
                     <label for="pan_number" id="pan_number_label">CC Number Token</label>
@@ -65,15 +58,14 @@
         <div class="form-group">
             <label for="pan_cvv" id="pan_cvv_label">CVV Token</label>
             <input class="form-control" placeholder="CVV" type="text" name="cc_cvv" maxlength="" id="pan1_cvv" value="">
-        </div-->
+        </div>
 
         <button type="submit">Reveal data</button>
     </form>
 
     <h1>Revealed data from entered Redacted Data :</h1>
-    <div>{{ response.data }}</div> 
-    <!-- <center> -->
-        <!-- <h1>Encrypted Data</h1> -->
+
+
         <h1> Redacted and Revealed Data Table:</h1>
     <table id="encryptTable" border="8">
 
@@ -86,18 +78,7 @@
 
     </table>
 
-    <!-- <h1>Decrypted Data</h1>
-    <table id="decryptTable" border="8">
 
-        <tr>
-            <th>cc#</th>
-            <th>exp date</th>
-            <th>cvv</th>
-        </tr>
-
-
-    </table> -->
-    <!-- </center> -->
     <script>
     
         // js
@@ -134,11 +115,11 @@
             $('#submitReveal').submit(function () {
 
                 var data = {};
-               /* data.card_number = $('#pan1_number').val();
+               data.card_number = $('#pan1_number').val();
                 data.exp_date = $('#pan1_exp').val();
-                data.cvv = $('#pan1_cvv').val();*/
+                data.cvv = $('#pan1_cvv').val();
 
-                data.cc_id = $('#pan_id').val();
+  
 
                 $.ajax({
                     type: "POST",
@@ -162,7 +143,7 @@
         });
 
         $(document).ready(function () {
-            //  $('#submitReveal').submit(function () {
+
 
             $.ajax({
                 url: "http://127.0.0.1:8000/ccGet/",
@@ -182,11 +163,11 @@
                     alert(errMsg);
                 }
             });
-            //      });
+  
         });
 
         $(document).ready(function () {
-            //  $('#submitReveal').submit(function () {
+
 
             $.ajax({
                 url: "http://127.0.0.1:8000/ccGet/",
@@ -206,10 +187,10 @@
                     alert(errMsg);
                 }
             });
-            //      });
+   
         });
     </script>
-    <!-- {% endblock %} -->
+
 </body>
 
 </html>
