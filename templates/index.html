@@ -81,7 +81,7 @@
 
 
     <h1> Redacted and Revealed Data Table:</h1>
-    <table class="table" id="encryptTable" border="8">
+    <table class="table" id="dataTable" border="8">
 
         <tr>
             <th>cc#</th>
@@ -170,7 +170,7 @@ $(document).ready(function () {
         success: function (data) {
             for (var i = 0; i < data.length; i++) {
                 var row = $('<tr><td>' + data[i].card_number + '</td>' + '<td>' + data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
-                $('#encryptTable').append(row);
+                $('#dataTable').append(row);
             }
             alert('ajax get call successful' + ' ' + data);
             
@@ -182,29 +182,7 @@ $(document).ready(function () {
 
 });
 
-$(document).ready(function () {
 
-
-    $.ajax({
-        url: "http://127.0.0.1:8000/ccGet/",
-        dataType: "JSON",
-        beforeSend: function (xhr, settings) {
-            xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-        },
-
-        success: function (data) {
-            for (var i = 0; i < data.length; i++) {
-                var row = $('<tr><td>' + data[i].card_number + '</td>' + '<td>' + data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
-                $('#decryptTable').append(row);
-            }
-            alert('ajax get call successful' + ' ' + data);
-        },
-        failure: function (errMsg) {
-            alert(errMsg);
-        }
-    });
-
-});
 
     </script>
    

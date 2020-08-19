@@ -9,4 +9,4 @@ class creditCardInfo(models.Model):
     cvv = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.cc_id + ' ' + self.card_number + ' ' + self.exp_date + ' ' + self.cvv
+        return self.card_number + ' ' + self.exp_date + ' ' + self.cvv
