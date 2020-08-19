@@ -1,39 +1,49 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>VGS</title>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+    crossorigin="anonymous">
+    
 </head>
 
 <body>
+    
     <h1>Enter Sentitive CC Data: </h1>
     <form class="form-horizontal2 boxed" id="submitRedact" method="POST" action="javascript:">
- 
+
         {% csrf_token %}
         <div class="panel panel-info">
-            <div class="form-group">
-                <div class="col-md-12">
-                    <label for="pan_number" id="pan_number_label">Credit Card Number </label>
-                    <input class="form-control" placeholder="Card Number" type="text" name="cc_number" maxlength="16"
-                        id="pan_number" value="">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="pan_exp" id="pan_exp_label">CC Expiration</label>
-                <input class="form-control" placeholder="Card Expiration" type="text" name="cc_exp" maxlength="5"
-                    id="pan_exp">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="pan_cvv" id="pan_cvv_label">CC CVV</label>
-            <input class="form-control" placeholder="CVV" type="text" name="cc_cvv" maxlength="3" id="pan_cvv" value="">
-        </div>
+            <div class="col-md-6">
+                <div class="form-group">
 
-        <button type="submit">Redact data</button>
+                    <label for="pan_number" id="pan_number_label">Credit Card Number </label>
+                    <input class="form-control" placeholder="i.e., 4111111111111111" type="text" name="cc_number" maxlength="16"
+                        id="pan_number" value="">
+
+                </div>
+                <div class="form-group">
+                    <label for="pan_exp" id="pan_exp_label">CC Expiration</label>
+                    <input class="form-control" placeholder="i.e., 08/23" type="text" name="cc_exp" maxlength="5"
+                        id="pan_exp">
+                </div>
+
+                <div class="form-group">
+                    <label for="pan_cvv" id="pan_cvv_label">CC CVV</label>
+                    <input class="form-control" placeholder="i.e., 455" type="text" name="cc_cvv" maxlength="3" id="pan_cvv"
+                        value="">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Redact data</button>
+            </div>
+        </div>
     </form>
 
 
@@ -41,32 +51,36 @@
     <form method="POST" action="javascript:" id="submitReveal">
         {% csrf_token %}
 
-       <div class="panel panel-info">
-            <div class="form-group">
-                <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="col-md-6">
+                <div class="form-group">
+
                     <label for="pan_number" id="pan_number_label">CC Number Token</label>
-                    <input class="form-control" placeholder="Card Number" type="text" name="cc_number" maxlength=""
+                    <input class="form-control" placeholder="i.e., tok_sandbox_hipDBbbRV9g1NuwcHZVzDh" type="text" name="cc_number" maxlength=""
                         id="pan1_number" value="">
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="pan_exp" id="pan_exp_label">CC Expiration Token</label>
-                <input class="form-control" placeholder="Card Expiration" type="text" name="cc_exp" maxlength=""
-                    id="pan1_exp">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="pan_cvv" id="pan_cvv_label">CVV Token</label>
-            <input class="form-control" placeholder="CVV" type="text" name="cc_cvv" maxlength="" id="pan1_cvv" value="">
-        </div>
 
-        <button type="submit">Reveal data</button>
+                <div class="form-group">
+                    <label for="pan_exp" id="pan_exp_label">CC Expiration Token</label>
+                    <input class="form-control" placeholder="i.e., tok_sandbox_vhPRvUcatq3h2Sd2hswkMg" type="text" name="cc_exp" maxlength=""
+                        id="pan1_exp">
+                </div>
+
+                <div class="form-group">
+                    <label for="pan_cvv" id="pan_cvv_label">CVV Token</label>
+                    <input class="form-control" placeholder="i.e., tok_sandbox_6V8VUMUq4qXLkHi8AoE1gi" type="text" name="cc_cvv" maxlength="" id="pan1_cvv"
+                        value="">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Reveal data</button>
+            </div>
+        </div>
     </form>
 
     <h1>Revealed data from entered Redacted Data :</h1>
 
 
-        <h1> Redacted and Revealed Data Table:</h1>
+    <h1> Redacted and Revealed Data Table:</h1>
     <table id="encryptTable" border="8">
 
         <tr>
@@ -78,118 +92,122 @@
 
     </table>
 
-
     <script>
-    
-        // js
-        $(document).ready(function () {
-            $('#submitRedact').submit(function () {
+ // js
+ $(document).ready(function () {
+    $('#submitRedact').submit(function () {
 
-                var data = {};
-                data.card_number = $('#pan_number').val();
-                data.exp_date = $('#pan_exp').val();
-                data.cvv = $('#pan_cvv').val();
+        var data = {};
+        data.card_number = $('#pan_number').val();
+        data.exp_date = $('#pan_exp').val();
+        data.cvv = $('#pan_cvv').val();
 
-                $.ajax({
-                    type: "POST",
-                    url: "http://127.0.0.1:8000/ccPost/",
-                    data: JSON.stringify(data),
-                    // 
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "JSON",
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                    },
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:8000/ccPost/",
+            data: JSON.stringify(data),
+            // 
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
 
-                    success: function (data) {
-                        alert('ajax post call successfull' + ' ' + data);
-                    },
-                    failure: function (errMsg) {
-                        alert(errMsg);
-                    }
-                });
-            });
+            success: function (data) {
+                alert('ajax post call successfull' + ' ' + data);
+                location.reload();
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
         });
+    });
+});
 
-        $(document).ready(function () {
-            $('#submitReveal').submit(function () {
+$(document).ready(function () {
+    $('#submitReveal').submit(function () {
 
-                var data = {};
-               data.card_number = $('#pan1_number').val();
-                data.exp_date = $('#pan1_exp').val();
-                data.cvv = $('#pan1_cvv').val();
+        var data = {};
+        data.card_number = $('#pan1_number').val();
+        data.exp_date = $('#pan1_exp').val();
+        data.cvv = $('#pan1_cvv').val();
 
-  
 
-                $.ajax({
-                    type: "POST",
-                    url: "http://127.0.0.1:8000/postReveal/",
-                    data: JSON.stringify(data),
-                    // 
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "JSON",
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                    },
 
-                    success: function (data) {
-                        alert('ajax post call successfull' + '-' + data);
-                    },
-                    failure: function (errMsg) {
-                        alert(errMsg);
-                    }
-                });
-            });
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:8000/postReveal/",
+            data: JSON.stringify(data),
+            // 
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+
+            success: function (data) {
+                alert('ajax post call successfull' + '-' + data);
+                location.reload();
+
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
         });
+    });
+});
 
-        $(document).ready(function () {
-
-
-            $.ajax({
-                url: "http://127.0.0.1:8000/ccGet/",
-                dataType: "JSON",
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                },
-
-                success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        var row = $('<tr><td>' + data[i].card_number + '</td>' + '<td>' + data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
-                        $('#encryptTable').append(row);
-                    }
-                    alert('ajax get call successful' + ' ' + data);
-                },
-                failure: function (errMsg) {
-                    alert(errMsg);
-                }
-            });
-  
-        });
-
-        $(document).ready(function () {
+$(document).ready(function () {
 
 
-            $.ajax({
-                url: "http://127.0.0.1:8000/ccGet/",
-                dataType: "JSON",
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                },
+    $.ajax({
+        url: "http://127.0.0.1:8000/ccGet/",
+        dataType: "JSON",
+        beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+        },
 
-                success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        var row = $('<tr><td>' + data[i].card_number + '</td>' + '<td>' + data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
-                        $('#decryptTable').append(row);
-                    }
-                    alert('ajax get call successful' + ' ' + data);
-                },
-                failure: function (errMsg) {
-                    alert(errMsg);
-                }
-            });
-   
-        });
+        success: function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var row = $('<tr><td>' + data[i].card_number + '</td>' + '<td>' + data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
+                $('#encryptTable').append(row);
+            }
+            alert('ajax get call successful' + ' ' + data);
+            
+        },
+        failure: function (errMsg) {
+            alert(errMsg);
+        }
+    });
+
+});
+
+$(document).ready(function () {
+
+
+    $.ajax({
+        url: "http://127.0.0.1:8000/ccGet/",
+        dataType: "JSON",
+        beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+        },
+
+        success: function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var row = $('<tr><td>' + data[i].card_number + '</td>' + '<td>' + data[i].exp_date + '</td>' + '<td>' + data[i].cvv + '</td></tr>')
+                $('#decryptTable').append(row);
+            }
+            alert('ajax get call successful' + ' ' + data);
+        },
+        failure: function (errMsg) {
+            alert(errMsg);
+        }
+    });
+
+});
+
     </script>
+   
 
 </body>
 
